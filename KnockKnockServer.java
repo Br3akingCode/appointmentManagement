@@ -7,12 +7,13 @@ import java.io.ObjectOutputStream;
 public class KnockKnockServer {
     public static void main(String[] args) throws IOException {
 
-        if (args.length != 1) {
+        if (args.length != 2) {
             System.err.println("Usage: java KnockKnockServer <port number>");
             System.exit(1);
         }
 
         int portNumber = Integer.parseInt(args[0]);
+        //String userName = args[1]; i believe we don't need this 
 
         try (
         // 1: Listen on the given port for a connection request
@@ -33,14 +34,6 @@ public class KnockKnockServer {
             Appointment inputLine, outputLine;
             KnockKnockProtocol kkp = new KnockKnockProtocol();
 
-            /**
-             * lines 37-52 is inspired by this explanation from Youtube creator, 
-             * WittCode
-             * Video Title: "Java Socket Programming Client Server Messenger"
-             * URL: https://www.youtube.com/watch?v=gchR3DpY-8Q
-             * Reason: I needed to understand concept and didn't know how to proceed
-             * ACCESSED ON: 02/08/24
-             */
 
             while (true) {
                 // #9 receieve response from client
