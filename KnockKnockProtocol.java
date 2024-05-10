@@ -17,7 +17,7 @@ public class KnockKnockProtocol {
      * suggestion: instead of waiting, maybe accept or deny based off of time and date issue(talk to chays) should it be in this class or is there a better way 
      * 
      */
-    public String processInput(String theInput) {
+    public String processInput(Appointment theInput) {
         //1st condition: connection established
         //2nd condition: I'm now in cpnversation: communication between client and server
         //3rd condition: connection ends: 'bye'
@@ -25,7 +25,7 @@ public class KnockKnockProtocol {
         //make another else if 27-31: to do predetermined responses output: 
         //optional for more of AI concept
 
-        String theOutput = null;
+        String theOutput = " ";
 
         if (state == WAITING) {
             /**
@@ -45,14 +45,15 @@ public class KnockKnockProtocol {
              * ACCESSED ON: 02/08/24
              */
         } else if (state == IN_CONVERSATION && theInput !=null) {
-            if (theInput.equalsIgnoreCase("Bye")) {
-                state = WAITING;
-
-            }else{
-                serverReceivedMessage = theInput;
-                clientReceivedMessage = theInput;
-                theOutput = serverReceivedMessage + "\n" + clientReceivedMessage;
+            if (theInput.getStatus() == true) { //this will not run because we are reading in objects not strings 
+                state = WAITING; 
+                theOutput = "Your appointment has been approved";
             }
+            // }else{
+                // serverReceivedMessage = theInput;
+                // clientReceivedMessage = theInput;
+                // theOutput = serverReceivedMessage + "\n" + clientReceivedMessage;
+            // }
         }
         return theOutput;
     } 
