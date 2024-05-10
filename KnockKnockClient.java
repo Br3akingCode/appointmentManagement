@@ -32,13 +32,9 @@ public class KnockKnockClient {
             String day;
             String clock;
 
-            /**
-             * lines 35-51 is inspired by this explanation from Youtube creator, 
-             * WittCode
-             * Video Title: "Java Socket Programming Client Server Messenger"
-             * URL: https://www.youtube.com/watch?v=gchR3DpY-8Q
-             * 
-             */
+            //read server and then print it out
+            //System.out.println("Server: " + in.readObject()); // Display message from server
+            //option hardcode it in
             while (true) {
                 System.out.println("What's your first name"); //ask my first question to store first name in 
                 System.out.print("Patient: ");
@@ -90,7 +86,7 @@ public class KnockKnockClient {
                 Appointment serverResponse = (Appointment) in.readObject();
                 //if appointment is not accepted then choose new day
 
-                //for loop that if their is already an appointment in the request the client has sent then they will be prompted to choose another date and time 
+                //for loop that if their is already an appointment in the request the client has sent then they will be prompted to chppse another date and time 
                 //date and time will be inputed and then date and time will be updated and sent back to the server
                 if(serverResponse.getStatus() == false){
                     System.out.print("Date in unavailiable. Please choose another date.");
@@ -104,7 +100,7 @@ public class KnockKnockClient {
                     out.writeObject(serverResponse); // this sends response to server 
                     System.out.println("Your appointment has been confirmed for " + serverResponse.getday() + " at " + serverResponse.getclock());
                 }else{
-                    System.out.println("Your appointment has been confirmed for " + serverResponse.getday() + " at " + serverResponse.getclock());
+                    System.out.println("Your appointment has been confirmed for " +  serverResponse.getday() + " at " + serverResponse.getclock());
                 }
 
             }
