@@ -37,9 +37,9 @@ import java.io.*;
 public class KKMultiServerThread extends Thread {
     private Socket socket = null;
     private AppointmentBook apptBook;
-/**
- * show him constructor and how we move forward to communicate appointment(client-server) and appointmentBook(server to server)
- */
+    /**
+     * show him constructor and how we move forward to communicate appointment(client-server) and appointmentBook(server to server)
+     */
     public KKMultiServerThread(Socket socket,AppointmentBook apptBook) {
         super("KKMultiServerThread");
         this.socket = socket;
@@ -49,27 +49,44 @@ public class KKMultiServerThread extends Thread {
     public void run() {
 
         try (
-        PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
-        BufferedReader in = new BufferedReader(
-                new InputStreamReader(
-                    socket.getInputStream()));
+        //refer to lab 6 instead of printwriter out and buffered reader in
+        ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
+
+        //PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
+        ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
         ) {
-            String inputLine, outputLine;
+            Appointment inputLine; 
+            String outputLine;
             KnockKnockProtocol kkp = new KnockKnockProtocol();
             outputLine = kkp.processInput(null);
-            out.println(outputLine);
-            //look at while loop and you can use system.out.println(inputline)
-            while ((inputLine = in.readLine()) != null) { //receives message from client: in
+            in.readObject(); //you want to read it, instead of writing it, trying to send something 
+            //look at while loop and you can use system.out.println(inputline) 
+            //server is talking over client; therefore you want 
+            while ((inputLine = (Appointment)in.readObject()) != null) {
                 System.out.println(inputLine); //print out client's message
                 outputLine = kkp.processInput(inputLine); //processes the message; sends it to protocol //ask which one to send appointment or appointmentBook
                 System.out.println("Server" + outputLine); // this will print the server side
-                out.println(outputLine); // this line sends it back and forth. 
-                if (outputLine.equals("Bye"))
+
+                if (inputLine == null) {
                     break;
+                }
+                //if there is no appt at that date and time
+                if(apptBook.searchAppt(inputLine) ==false){
+                    //add to appt book
+                    apptBook.addAppt(inputLine);
+                    inputLine.setStatus(true); //status initially set to false, once an appt is added change to true
+                    out.writeObject(inputLine); //you want the client to know the appt was accepted, so you send the object back
+                }else{
+                    out.writeObject(inputLine); // this sends the client's object back if we can't add the appointment 
+                }
+
             }
+
             socket.close();
         } catch (IOException e) {
             e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            System.out.println("Exception: Class not found");
         }
     }
 }
